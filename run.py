@@ -229,24 +229,28 @@ def main():
     total_time = time.time() - start_time
 
     acc, correct = evaluate(preds)
-    
-    # Load results in JSON format
-    print(
-        json.dumps(
-            {
-                "method": args.method,
-                "model": args.model_name,
-                "split": args.split,
-                "seed": args.seed,
-                "max_samples": args.max_samples,
-                "accuracy": acc,
-                "correct": correct,
-                "total_time_sec": round(total_time,4),
-                "time_per_sample_sec": round(total_time / args.max_samples, 4),
-            },
-            ensure_ascii=False,
-        )
-    )
+
+    result = {
+        "method": args.method,
+        "model": args.model_name,
+        "split": args.split,
+        "seed": args.seed,
+        "max_samples": args.max_samples,
+        "accuracy": acc,
+        "correct": correct,
+        "total_time_sec": round(total_time, 4),
+        "time_per_sample_sec": round(total_time / args.max_samples, 4),
+    }
+    print(json.dumps(result, ensure_ascii=False))
+
+    # save to results/
+    os.makedirs("results", exist_ok=True)
+    model_tag = args.model_name.replace("/", "_")
+    prompt_tag = f"_{args.prompt}" if args.method != "baseline" else ""
+    result_path = f"results/{args.method}{prompt_tag}_{model_tag}_{args.task}_seed{args.seed}.json"
+    with open(result_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+    print(f"[Saved] {result_path}")
 
 
 
