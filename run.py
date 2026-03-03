@@ -88,8 +88,10 @@ def main():
     parser.add_argument("--method", choices=["baseline", "text_mas", "latent_mas"], required=True,
                         help="Which multi-agent method to run: 'baseline', 'text_mas', or 'latent_mas'.")
     parser.add_argument("--model_name", type=str, required=True,
-                        choices=["Qwen/Qwen3-4B", "Qwen/Qwen3-4B", "Qwen/Qwen3-14B"],
-                        help="Model choices to use for experiments (e.g. 'Qwen/Qwen3-14B').")
+                        choices=["Qwen/Qwen3-4B", "Qwen/Qwen3-8B", "Qwen/Qwen3-14B"],
+                        help="Model identifier used for prompt building (e.g. 'Qwen/Qwen3-14B').")
+    parser.add_argument("--model_path", type=str, default=None,
+                        help="Local path to load the model from. If set, overrides --model_name for actual model loading.")
     parser.add_argument("--max_samples", type=int, default=-1, help="Number of questions to evaluate; set -1 to use all samples.")
     parser.add_argument("--task", choices=["gsm8k", "aime2024", "aime2025", "gpqa", "arc_easy", "arc_challenge", "mbppplus", 'humanevalplus', 'medqa'], default="gsm8k",
                         help="Dataset/task to evaluate. Controls which loader is used.")
@@ -124,7 +126,8 @@ def main():
     
     set_seed(args.seed)
     device = auto_device(args.device)
-    model = ModelWrapper(args.model_name, device, use_vllm=args.use_vllm, args=args)
+    model_load_path = args.model_path if args.model_path else args.model_name
+    model = ModelWrapper(model_load_path, device, use_vllm=args.use_vllm, args=args)
     
     start_time = time.time()
 
