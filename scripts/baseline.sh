@@ -41,16 +41,19 @@ CUDA_VISIBLE_DEVICES=3 python run.py \
     2>&1 | tee results/baseline_4B_arc_easy_vllm.log
 
 
-CUDA_VISIBLE_DEVICES=4 python run.py \
+CUDA_VISIBLE_DEVICES=0,1 python run.py \
     --method latent_mas \
     --model_name Qwen/Qwen3-4B \
-    --model_path /sharedspace/models/Qwen3-4B \
+    --model_path /NAS/models/Qwen3-4B \
     --task arc_easy \
     --prompt sequential \
     --max_samples -1 \
     --max_new_tokens 2048 \
     --use_vllm \
-    2>&1 | tee results/latent_mas_sequential_4B_arc_easy_vllm.log
+    --use_second_HF_model \
+    --enable_prefix_caching \
+    --device2 cuda:1 \
+    2>&1 | tee results/latent_mas_sequential_4B_arc_easy_vllm.log   
 
 
 CUDA_VISIBLE_DEVICES=2 python run.py \
