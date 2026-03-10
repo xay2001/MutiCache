@@ -65,3 +65,24 @@ CUDA_VISIBLE_DEVICES=2 python run.py \
     --max_samples -1 \
     --max_new_tokens 2048 \
     2>&1 | tee results/latent_mas_sequential_14B_arc_easy.log
+
+CUDA_VISIBLE_DEVICES=7 python run.py \
+    --method latent_mas \
+    --model_name Qwen/Qwen3-4B \
+    --model_path /sharedspace/models/Qwen3-4B \
+    --task gsm8k \
+    --max_samples -1 \
+    --prompt sequential \
+    --max_new_tokens 2048 \
+    --latent_steps 20 \
+    2>&1 | tee results/0310/latent_mas_sequential_4B_gsm8k_latent_steps_20.log
+
+CUDA_VISIBLE_DEVICES=7 python run.py \
+    --method latent_mas \
+    --model_name Qwen/Qwen3-4B \
+    --model_path /sharedspace/models/Qwen3-4B \
+    --task gsm8k \
+    --max_samples -1 \
+    --prompt sequential \
+    --max_new_tokens 2048 \
+    2>&1 | tee results/0310/latent_mas_sequential_4B_gsm8k.log
